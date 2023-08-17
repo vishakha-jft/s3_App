@@ -40,14 +40,15 @@ public class MainController {
         return "folderList";
     }
 
-    @GetMapping("/images/{bucketName}/**")
+    @GetMapping("/bucket/{bucketName}/images/**")
     public ResponseEntity<List<String>> getAllImageUrls(@PathVariable("bucketName") String bucketName, HttpServletRequest request) throws IOException {
         String remainingPath = (String) request.getAttribute(org.springframework.web.servlet.HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        String prefix = "/images/" + bucketName + "/";
+        String prefix = "/bucket/" + bucketName + "/images/";
         String dataAfterPrefix = "";
         if (remainingPath.startsWith(prefix)) {
             dataAfterPrefix =  remainingPath.substring(prefix.length());
         }
+        System.out.println(" prefixxxx "+ dataAfterPrefix);
         List <String> imageList = s3Service.getImages(bucketName,dataAfterPrefix);
         List <String> imageurls = new ArrayList<>();
         for (String image : imageList ) {
