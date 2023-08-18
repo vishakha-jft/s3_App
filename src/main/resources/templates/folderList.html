@@ -70,7 +70,7 @@
   function createFolder(){
     var form = document.getElementById('folderForm');
     var formData = new FormData(form);
-    fetch('/folder', {
+    fetch('/bucket/folders', {
       method: 'POST',
       body:formData
     })
@@ -89,7 +89,7 @@
     const file = formData.get("image");;
     var pathName = formData.get("pathName");
     console.log(pathName,file)
-    fetch('/image', {
+    fetch('bucket/images', {
       method: 'POST',
       body:formData
     })

@@ -12,23 +12,24 @@ import java.util.UUID;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/bucket")
 public class StorageController {
 
     @Autowired
     private S3Service s3Service;
 
-    @PostMapping("/folder")
+    @PostMapping("/folders")
     public ResponseEntity<Void> createFolder(@RequestParam("bucketName")String bucketName,@RequestParam("pathName")String pathName,@RequestParam("folderName")String folderName) {
         String foldername = s3Service.createFolder(bucketName , folderName,pathName);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/bucket/{bucketName}")
-    public ResponseEntity<Void> createBucket(@PathVariable("bucketName") String bucketName){
+    @PostMapping("/{bucket-name}")
+    public ResponseEntity<Void> createBucket(@PathVariable("bucket-name") String bucketName){
         String bucket = s3Service.createBucket(bucketName);
         return ResponseEntity.ok().build();
     }
-    @PostMapping("/image")
+    @PostMapping("/images")
     public ResponseEntity<byte[]>  uploadImage(@RequestParam("image") MultipartFile file,@RequestParam("pathName") String pathName) throws IOException {
         String uniqueFileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
         s3Service.uploadImage(pathName,file,uniqueFileName,"");

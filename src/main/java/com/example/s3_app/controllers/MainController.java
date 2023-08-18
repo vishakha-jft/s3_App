@@ -26,8 +26,8 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/bucket/{bucketName}/**")
-    public String getFolders(@PathVariable("bucketName") String bucketName, HttpServletRequest request, Model model) {
+    @GetMapping("/bucket/{bucket-name}/**")
+    public String getFolders(@PathVariable("bucket-name") String bucketName, HttpServletRequest request, Model model) {
         String remainingPath = (String) request.getAttribute(org.springframework.web.servlet.HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         String prefix = "/bucket/" + bucketName + "/";
         String dataAfterPrefix = "";
@@ -40,8 +40,8 @@ public class MainController {
         return "folderList";
     }
 
-    @GetMapping("/bucket/{bucketName}/images/**")
-    public ResponseEntity<List<String>> getAllImageUrls(@PathVariable("bucketName") String bucketName, HttpServletRequest request) throws IOException {
+    @GetMapping("/bucket/{bucket-name}/images/**")
+    public ResponseEntity<List<String>> getAllImageUrls(@PathVariable("bucket-name") String bucketName, HttpServletRequest request) throws IOException {
         String remainingPath = (String) request.getAttribute(org.springframework.web.servlet.HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         String prefix = "/bucket/" + bucketName + "/images/";
         String dataAfterPrefix = "";
