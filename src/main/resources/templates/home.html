@@ -34,7 +34,7 @@
         <th th:text="${bucketIndex.index}"></th>
         <td th:text="${bucket}"></td>
         <td>
-            <a th:href="'/bucket/'+${bucket}" class="btn btn-info btn-sm mb-3">OPEN</a>
+            <a th:href="'/buckets/'+${bucket}" class="btn btn-info btn-sm mb-3">OPEN</a>
         </td>
     </tr>
     </tbody>
@@ -44,9 +44,17 @@
     function createBucket(){
         var form = document.getElementById('bucketForm');
         var formData = new FormData(form);
-        var bucketName = formData.get("bucketName");
-        fetch('/bucket/' + bucketName, {
+        const jsonObject = {};
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+        const jsonPayload = JSON.stringify(jsonObject);
+        fetch('/buckets', {
             method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: jsonPayload
         })
             .then(response => {
                 if (response.ok) {

@@ -1,5 +1,8 @@
 package com.example.s3_app.controllers;
 
+import com.example.s3_app.dtos.BucketDTO;
+import com.example.s3_app.dtos.FolderDTO;
+import com.example.s3_app.dtos.ImageDTO;
 import com.example.s3_app.services.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,30 +15,29 @@ import java.util.UUID;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/bucket")
+@RequestMapping("/buckets")
 public class StorageController {
 
     @Autowired
     private S3Service s3Service;
 
     @PostMapping("/folders")
-    public ResponseEntity<Void> createFolder(@RequestParam("bucketName")String bucketName,@RequestParam("pathName")String pathName,@RequestParam("folderName")String folderName) {
-        String foldername = s3Service.createFolder(bucketName , folderName,pathName);
+    public ResponseEntity<Void> createFolder(@RequestBody FolderDTO folderDTO) {
+        s3Service.createFolder(folderDTO.getBucketName() , folderDTO.getFolderName(), folderDTO.getPathName());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{bucket-name}")
-    public ResponseEntity<Void> createBucket(@PathVariable("bucket-name") String bucketName){
-        String bucket = s3Service.createBucket(bucketName);
+    @PostMapping()
+    public ResponseEntity<Void> createBucket(@RequestBody BucketDTO bucketDTO){
+        s3Service.createBucket(bucketDTO.getBucketName());
         return ResponseEntity.ok().build();
     }
     @PostMapping("/images")
-    public ResponseEntity<byte[]>  uploadImage(@RequestParam("image") MultipartFile file,@RequestParam("pathName") String pathName) throws IOException {
-        String uniqueFileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-        s3Service.uploadImage(pathName,file,uniqueFileName,"");
-        MultipartFile file1 = file;
-        byte [ ] bytes = StreamUtils.copyToByteArray(file.getInputStream());
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(bytes);
+    public ResponseEntity<Void>  uploadImage(@RequestBody ImageDTO imageDTO) throws IOException {
+        String uniqueFileName = UUID.randomUUID().toString();
+        s3Service.uploadImage(imageDTO.getPathName(), imageDTO.getImage(),uniqueFileName,"");
+        System.out.println(imageDTO);
+        return ResponseEntity.ok().build();
     }
 
 }

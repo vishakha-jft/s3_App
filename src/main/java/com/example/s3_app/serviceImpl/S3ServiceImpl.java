@@ -69,10 +69,12 @@ public class S3ServiceImpl implements S3Service {
         }
         return folders;
     }
-    public void uploadImage(String bucketName, MultipartFile image, String key, String imagePath) throws IOException {
+    public void uploadImage(String bucketName, String image, String key, String imagePath) throws IOException {
+        byte[] imageBytes = Base64.getDecoder().decode(image);
+        InputStream inputStream = new ByteArrayInputStream(imageBytes);
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("image/jpeg");
-        InputStream inputStream = image.getInputStream();
+        metadata.setContentLength(imageBytes.length);
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, inputStream, metadata);
         amazonS3.putObject(putObjectRequest);
     }
@@ -82,7 +84,7 @@ public class S3ServiceImpl implements S3Service {
         if(amazonS3.doesBucketExist(bucketName)) {
             return null;
         }
-        Bucket az =amazonS3.createBucket(bucketName);
+        Bucket az = amazonS3.createBucket(bucketName);
         return bucketName;
     }
 
