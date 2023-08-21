@@ -70,13 +70,14 @@
   function createFolder(){
     var form = document.getElementById('folderForm');
     var formData = new FormData(form);
+    const bucketName = formData.get("bucketName");
     const jsonObject = {};
     formData.forEach((value, key) => {
       jsonObject[key] = value;
     });
     const jsonPayload = JSON.stringify(jsonObject);
     console.log(jsonPayload)
-    fetch('/buckets/folders', {
+    fetch('/buckets/'+bucketName+'/folders', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -95,6 +96,7 @@
   function uploadImage() {
     var form = document.getElementById('imageForm');
     var formData = new FormData(form);
+    const bucketName = formData.get("bName");
     const file = formData.get("image");
     console.log(file)
     const jsonPayload = {};
@@ -108,8 +110,7 @@
         const imageData = event.target.result.split(',')[1]; // Extract base64 data
         jsonPayload.image = imageData
         console.log(typeof jsonPayload.image)
-        // buckets/images
-        fetch('/buckets/images', {
+        fetch('/buckets/'+bucketName+'/images', {
           method: 'POST',
           headers: {
             "Content-Type": "application/json"

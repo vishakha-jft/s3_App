@@ -1,6 +1,7 @@
 package com.example.s3_app.controllers;
 import com.example.s3_app.services.S3Service;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import java.util.List;
 
 
 @Controller
+@Slf4j
 public class MainController {
 
     @Autowired
