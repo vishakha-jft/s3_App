@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>S3 - Service</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<h2> S3 - APP (Image Uploader )</h2>
+<div class="container" style="background-color: #fff;margin-top: 5rem;border-radius: 2%">
+<h3>Choose your s3 bucket</h3>
+    <form id="bucketForm">
+        <div class="md-form mb-5 d-flex justify-content-around">
+            <i class="fas fa-tag prefix grey-text"></i>
+            <div class="w-75">
+                <input type="text" id="bucketName" name="bucketName" class="form-control validate">
+                <label data-error="wrong" data-success="right" for="bucketName">your Bucket Name</label>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-info mt-1" onclick="createBucket()">Add<i class="fas fa-sign-in ml-1"></i></button>
+        </div>
+    </form>
+<table class="table table-striped table-bordered" style="margin-bottom: 3rem" >
+    <thead class="table-dark">
+    <tr>
+        <th scope="col">S.No.</th>
+        <th scope="col">Bucket Name</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="bucket,bucketIndex: ${bucketList}">
+        <th th:text="${bucketIndex.index}"></th>
+        <td th:text="${bucket}"></td>
+        <td>
+            <a th:href="'/buckets/'+${bucket}" class="btn btn-info btn-sm mb-3">OPEN</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<script th:inline="javascript">
+    function createBucket(){
+        var form = document.getElementById('bucketForm');
+        var formData = new FormData(form);
+        const jsonObject = {};
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+        const jsonPayload = JSON.stringify(jsonObject);
+        fetch('/buckets', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: jsonPayload
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.error('POST request failed with status:', response.status);
+                }
+            })
+            .catch(error => console.error('Error submitting form:', error));
+    }
+</script>
+</body>
+</html>
