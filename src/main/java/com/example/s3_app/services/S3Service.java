@@ -11,7 +11,7 @@ public interface S3Service {
     String uploadFile(String bucketName, String folderName, MultipartFile file) throws IOException;
     String getImage(String bucketName,String imageName,String prefix) throws IOException;
     List<String> getImages(String bucketName,String prefix);
-    void uploadImage(String bucketName, String image,String key, String imagePath) throws  IOException;
+    void uploadImage(String bucketName, MultipartFile image,String key, String imagePath) throws  IOException;
     List<String> getFolders(String bucketName,String Prefix);
     List<String> getBucketList();
 }

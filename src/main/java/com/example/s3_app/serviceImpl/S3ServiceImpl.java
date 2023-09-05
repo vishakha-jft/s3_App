@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class S3ServiceImpl implements S3Service {
@@ -49,11 +51,16 @@ public class S3ServiceImpl implements S3Service {
         List<String> images = new ArrayList<>();
         ObjectListing objectListing = amazonS3.listObjects(bucketName,prefix);
         List<S3ObjectSummary> objectSummaries = objectListing.getObjectSummaries();
+        Pattern imagePattern = Pattern.compile("^.+\\.(png|jpg|gif|bmp|jpeg|PNG|JPG|GIF|BMP|JPEG)$");
         for (S3ObjectSummary objectSummary : objectSummaries) {
-            if (objectSummary.getKey().endsWith(".png") ){
-                images.add(objectSummary.getKey());
+            String objectKey = objectSummary.getKey();
+            Matcher matcher = imagePattern.matcher(objectKey);
+
+            if (matcher.matches()) {
+                images.add(objectKey);
             }
         }
+        System.out.println("imagess"+images.size());
         return images;
     }
 
@@ -62,29 +69,34 @@ public class S3ServiceImpl implements S3Service {
         ObjectListing objectListing = amazonS3.listObjects(bucketName,prefix);
         List<S3ObjectSummary> objectSummaries = objectListing.getObjectSummaries();
         List<String> folders = new ArrayList<>();
+        Pattern imagePattern = Pattern.compile(".+\\.(png|jpg|gif|bmp|jpeg|PNG|JPG|GIF|BMP|JPEG)$");
         for (S3ObjectSummary objectSummary : objectSummaries) {
-            if (!objectSummary.getKey().endsWith(".png")) {
-                folders.add(objectSummary.getKey());
+            String objectKey = objectSummary.getKey();
+            Matcher matcher = imagePattern.matcher(objectKey);
+            if (!matcher.matches()) {
+                folders.add(objectKey);
             }
         }
         return folders;
     }
-    public void uploadImage(String bucketName, String image, String key, String imagePath) throws IOException {
-        byte[] imageBytes = Base64.getDecoder().decode(image);
-        InputStream inputStream = new ByteArrayInputStream(imageBytes);
+    public void uploadImage(String bucketName, MultipartFile image, String key, String imagePath) throws IOException {
+        System.out.println(" uploaddd image impl");
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("image/jpeg");
-        metadata.setContentLength(imageBytes.length);
+        InputStream inputStream = image.getInputStream();
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, inputStream, metadata);
         amazonS3.putObject(putObjectRequest);
+        System.out.println(" upload image successsss ");
     }
 
     @Override
     public String createBucket(String bucketName) {
         if(amazonS3.doesBucketExist(bucketName)) {
+            System.out.println(" Bucket Existtttt ");
             return null;
         }
         Bucket az = amazonS3.createBucket(bucketName);
+        System.out.println("bucket Createddddd");
         return bucketName;
     }
 

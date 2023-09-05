@@ -14,4 +14,5 @@ public class ImageDTO {
     public String bucketName;
     public String pathName;
     public String image;
+    public MultipartFile img;
 }
