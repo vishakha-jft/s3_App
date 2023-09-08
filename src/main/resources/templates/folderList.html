@@ -96,39 +96,23 @@
   function uploadImage() {
     var form = document.getElementById('imageForm');
     var formData = new FormData(form);
-    const bucketName = formData.get("bName");
-    const file = formData.get("image");
-    console.log(file)
-    const jsonPayload = {};
-    formData.forEach((value, key) => {
-      jsonPayload[key] = value;
-    });
-    console.log(jsonPayload, typeof jsonPayload.image)
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const imageData = event.target.result.split(',')[1]; // Extract base64 data
-        jsonPayload.image = imageData
-        console.log(typeof jsonPayload.image)
-        fetch('/buckets/'+bucketName+'/images', {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(jsonPayload)
-        })
-                .then(response => {
-                    console.log(response)
-                    if (response.ok) {
-                      location.reload();
-                    } else {
-                      console.error('POST request failed with status:', response.status);
-                    }
-                  })
-                .catch(error => console.error('Error submitting form:', error));
-      }
-      reader.readAsDataURL(file);
-    }
+    const file = formData.get("image");;
+    var pathName = formData.get("pathName");
+    console.log(pathName," pathhhh")
+    paths = window.location.pathname.split('/');
+    console.log(paths[2],"bucket nameeee")
+    fetch('/buckets/'+paths[2]+'/images', {
+      method: 'POST',
+      body:formData
+    }).then(response => {
+              console.log(response)
+              if (response.ok) {
+                location.reload();
+              } else {
+                console.error('POST request failed with status:', response.status);
+              }
+            })
+     .catch(error => console.error('Error submitting form:', error));
   };
     // console.log(jsonPayload,jsonPayload.image ,typeof jsonPayload.image  )
   $(document).ready(function () {

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,8 +26,15 @@ public class MainController {
     @GetMapping("/")
     public String home(Model model) {
         List <String> bucketList = s3Service.getBucketList();
+        System.out.println("bucketttt Listtttt"+bucketList);
         model.addAttribute("bucketList",bucketList);
         return "home";
+    }
+
+    @GetMapping("/testing")
+    @ResponseBody
+    public String testing(){
+        return "Testing";
     }
 
     @GetMapping("/buckets/{bucket-name}/**")
@@ -52,6 +61,7 @@ public class MainController {
         }
         System.out.println(" prefixxxx "+ dataAfterPrefix);
         List <String> imageList = s3Service.getImages(bucketName,dataAfterPrefix);
+        System.out.println(imageList + "image listtttt");
         List <String> imageurls = new ArrayList<>();
         for (String image : imageList ) {
             imageurls.add(s3Service.getImage(bucketName,image,dataAfterPrefix));
