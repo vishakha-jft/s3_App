@@ -23,7 +23,7 @@ public class StorageController {
     private S3Service s3Service;
     @PostMapping()
     public ResponseEntity<Void> createBucket(@RequestBody BucketDTO bucketDTO){
-        System.out.println("buckettttttn nameeeeeeeee"+bucketDTO.getBucketName());
+//        System.out.println("buckettttttn nameeeeeeeee"+bucketDTO.getBucketName());
         s3Service.createBucket(bucketDTO.getBucketName());
         return ResponseEntity.ok().build();
     }
