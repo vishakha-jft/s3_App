@@ -23,14 +23,15 @@ public class StorageController {
     private S3Service s3Service;
     @PostMapping()
     public ResponseEntity<Void> createBucket(@RequestBody BucketDTO bucketDTO){
-//        System.out.println("buckettttttn nameeeeeeeee"+bucketDTO.getBucketName());
-        s3Service.createBucket(bucketDTO.getBucketName());
+        System.out.println("buckettttttn nameeeeeeeee"+bucketDTO.getBucketName());
+//        s3Service.createBucket(bucketDTO.getBucketName());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{bucket-name}/folders")
     public ResponseEntity<Void> createFolder(@PathVariable("bucket-name")String bucketName,@RequestBody FolderDTO folderDTO) {
-        s3Service.createFolder(bucketName , folderDTO.getFolderName(), folderDTO.getPathName());
+        System.out.println("folder Createdddd");
+//        s3Service.createFolder(bucketName , folderDTO.getFolderName(), folderDTO.getPathName());
         return ResponseEntity.ok().build();
     }
 
